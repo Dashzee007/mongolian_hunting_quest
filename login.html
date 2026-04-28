@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Нэвтрэх – Mongolian Hunting Quest</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">Mongolian Hunting Quest</div>
+    <nav>
+        <ul>
+            <li><a href="index.html">Нүүр</a></li>
+            <li><a href="animals.html">Ан амьтад</a></li>
+            <li><a href="gallery.html">Зургийн сан</a></li>
+            <li><a href="map.html">Ан агнуурын бүс</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main class="auth-page">
+    <div class="auth-card">
+        <div class="auth-logo">🦁</div>
+        <h1 class="auth-title">Нэвтрэх</h1>
+        <p class="auth-subtitle">Mongolian Hunting Quest-д тавтай морил</p>
+
+        <div id="authError" class="auth-message auth-error" hidden></div>
+
+        <form id="loginForm" class="auth-form" novalidate>
+            <div class="form-group">
+                <label for="identifier">Имэйл эсвэл нэвтрэх нэр</label>
+                <input id="identifier" type="text" required
+                       placeholder="имэйл@example.com" autocomplete="username">
+            </div>
+            <div class="form-group">
+                <label for="password">Нууц үг</label>
+                <input id="password" type="password" required
+                       placeholder="Нууц үгээ оруулна уу" autocomplete="current-password">
+            </div>
+            <button type="submit" class="auth-submit">Нэвтрэх</button>
+        </form>
+
+        <p class="auth-switch">
+            Бүртгэлгүй юу? <a href="signup.html">Бүртгүүлэх</a>
+        </p>
+    </div>
+</main>
+
+<footer>
+    <p>© 2026 Mongolian Hunting Quest — Монголын ан амьтдын мэдээллийн платформ</p>
+</footer>
+
+<script type="module">
+import { login, getSession, initNavAuth } from './js/auth.js';
+
+if (getSession()) window.location.replace('index.html');
+
+initNavAuth();
+
+const form  = document.getElementById('loginForm');
+const error = document.getElementById('authError');
+
+form.addEventListener('submit', async e => {
+    e.preventDefault();
+    error.hidden = true;
+    const btn = form.querySelector('button[type="submit"]');
+    btn.disabled    = true;
+    btn.textContent = 'Нэвтэрч байна…';
+    try {
+        await login(
+            document.getElementById('identifier').value.trim(),
+            document.getElementById('password').value
+        );
+        window.location.replace('index.html');
+    } catch (err) {
+        error.textContent = err.message;
+        error.hidden      = false;
+        btn.disabled      = false;
+        btn.textContent   = 'Нэвтрэх';
+    }
+});
+</script>
+</body>
+</html>

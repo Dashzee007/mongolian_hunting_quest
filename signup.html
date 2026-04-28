@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Бүртгүүлэх – Mongolian Hunting Quest</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">Mongolian Hunting Quest</div>
+    <nav>
+        <ul>
+            <li><a href="index.html">Нүүр</a></li>
+            <li><a href="animals.html">Ан амьтад</a></li>
+            <li><a href="gallery.html">Зургийн сан</a></li>
+            <li><a href="map.html">Ан агнуурын бүс</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main class="auth-page">
+    <div class="auth-card">
+        <div class="auth-logo">🦁</div>
+        <h1 class="auth-title">Бүртгүүлэх</h1>
+        <p class="auth-subtitle">Шинэ бүртгэл үүсгэх</p>
+
+        <div id="authError" class="auth-message auth-error" hidden></div>
+
+        <form id="signupForm" class="auth-form" novalidate>
+            <div class="form-group">
+                <label for="username">Хэрэглэгчийн нэр</label>
+                <input id="username" type="text" required
+                       placeholder="Хэрэглэгчийн нэрээ оруулна уу" autocomplete="username">
+            </div>
+            <div class="form-group">
+                <label for="email">Имэйл</label>
+                <input id="email" type="email" required
+                       placeholder="имэйл@example.com" autocomplete="email">
+            </div>
+            <div class="form-group">
+                <label for="password">Нууц үг</label>
+                <input id="password" type="password" required
+                       placeholder="Нууц үгээ оруулна уу" autocomplete="new-password">
+            </div>
+            <div class="form-group">
+                <label for="confirm">Нууц үг давтах</label>
+                <input id="confirm" type="password" required
+                       placeholder="Нууц үгийг дахин оруулна уу" autocomplete="new-password">
+            </div>
+            <button type="submit" class="auth-submit">Бүртгүүлэх</button>
+        </form>
+
+        <p class="auth-switch">
+            Бүртгэлтэй юу? <a href="login.html">Нэвтрэх</a>
+        </p>
+    </div>
+</main>
+
+<footer>
+    <p>© 2026 Mongolian Hunting Quest — Монголын ан амьтдын мэдээллийн платформ</p>
+</footer>
+
+<script type="module">
+import { register, getSession, initNavAuth } from './js/auth.js';
+
+if (getSession()) window.location.replace('index.html');
+
+initNavAuth();
+
+const form  = document.getElementById('signupForm');
+const error = document.getElementById('authError');
+
+form.addEventListener('submit', async e => {
+    e.preventDefault();
+    error.hidden = true;
+
+    const username = document.getElementById('username').value.trim();
+    const email    = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const confirm  = document.getElementById('confirm').value;
+
+    if (password !== confirm) {
+        error.textContent = 'Нууц үг таарахгүй байна';
+        error.hidden      = false;
+        return;
+    }
+
+    const btn = form.querySelector('button[type="submit"]');
+    btn.disabled    = true;
+    btn.textContent = 'Бүртгүүлж байна…';
+    try {
+        await register({ username, email, password });
+        window.location.replace('index.html');
+    } catch (err) {
+        error.textContent = err.message;
+        error.hidden      = false;
+        btn.disabled      = false;
+        btn.textContent   = 'Бүртгүүлэх';
+    }
+});
+</script>
+</body>
+</html>

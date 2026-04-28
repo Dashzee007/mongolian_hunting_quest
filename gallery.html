@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Зургийн сан – Mongolian Hunting Quest</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">Mongolian Hunting Quest</div>
+    <nav>
+        <ul>
+            <li><a href="index.html">Нүүр</a></li>
+            <li><a href="animals.html">Ан амьтад</a></li>
+            <li><a href="gallery.html" class="nav-active">Зургийн сан</a></li>
+            <li><a href="map.html">Ан агнуурын бүс</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+
+    <section class="page-hero gallery-hero">
+        <div class="page-hero-content">
+            <h1>Зургийн сан</h1>
+            <p>Монголын зэрлэг амьтдын гэрэл зургийн цуглуулга</p>
+        </div>
+    </section>
+
+    <section class="gallery-tabs" aria-label="Ангилал шүүлт">
+        <div class="tabs-inner">
+            <button class="tab-btn active" data-filter="all">🌿 Бүгд</button>
+            <button class="tab-btn" data-filter="Хөхтөн">🦌 Хөхтөн</button>
+            <button class="tab-btn" data-filter="Шувуу">🦅 Шувуу</button>
+            <button class="tab-btn" data-filter="Холимог идэшт">🐻 Холимог идэшт</button>
+        </div>
+    </section>
+
+    <section class="gallery-section">
+        <div id="galleryGrid" class="gallery-grid"></div>
+    </section>
+
+</main>
+
+<!-- Lightbox -->
+<div id="lightbox" class="lightbox" hidden role="dialog" aria-modal="true">
+    <button class="lb-close" id="lbClose" aria-label="Хаах">✕</button>
+    <button class="lb-nav lb-prev" id="lbPrev" aria-label="Өмнөх">‹</button>
+    <button class="lb-nav lb-next" id="lbNext" aria-label="Дараах">›</button>
+    <div class="lb-content">
+        <img id="lbImg" src="" alt="">
+        <div class="lb-caption">
+            <h3 id="lbName"></h3>
+            <p id="lbMeta"></p>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>© 2026 Mongolian Hunting Quest</p>
+</footer>
+
+<script type="module" src="js/gallery.js"></script>
+<script type="module">import { initNavAuth } from './js/auth.js'; initNavAuth();</script>
+</body>
+</html>

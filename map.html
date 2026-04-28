@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ан агнуурын бүс – Mongolian Hunting Quest</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">Mongolian Hunting Quest</div>
+    <nav>
+        <ul>
+            <li><a href="index.html">Нүүр</a></li>
+            <li><a href="animals.html">Ан амьтад</a></li>
+            <li><a href="gallery.html">Зургийн сан</a></li>
+            <li><a href="map.html" class="nav-active">Ан агнуурын бүс</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="map-page-wrap">
+
+    <!-- Full-screen map -->
+    <div id="map"></div>
+
+    <!-- Mobile toggle button (hidden on desktop) -->
+    <button class="gmap-toggle" id="panelToggle" aria-label="Хавтас нээх">☰</button>
+
+    <!-- Floating left panel -->
+    <div class="gmap-panel" id="gmapPanel">
+
+        <!-- Floating search box -->
+        <div class="gmap-search-box">
+            <span class="gmap-search-icon">🔍</span>
+            <input id="regionSearch" type="search"
+                   placeholder="Бүс нутаг хайх…" autocomplete="off"
+                   aria-label="Бүс нутаг хайх">
+        </div>
+
+        <!-- Region list -->
+        <div class="gmap-regions">
+            <div class="gmap-regions-header">Бүс нутгууд</div>
+            <ul id="regionList" class="region-list"></ul>
+        </div>
+
+    </div>
+
+    <!-- Detail panel (slides in from right) -->
+    <div class="gmap-detail" id="gmapDetail" role="complementary" aria-label="Бүсийн дэлгэрэнгүй">
+        <div class="gmap-detail-header">
+            <h3 id="detailRegion">—</h3>
+            <button class="gmap-detail-close" id="detailClose" aria-label="Хаах">✕</button>
+        </div>
+        <div class="gmap-detail-body" id="detailBody"></div>
+    </div>
+
+    <!-- Legend -->
+    <div class="map-legend" aria-label="Тайлбар">
+        <div class="legend-item"><span class="legend-dot dot-mammal"></span>Хөхтөн</div>
+        <div class="legend-item"><span class="legend-dot dot-bird"></span>Шувуу</div>
+        <div class="legend-item"><span class="legend-dot dot-mixed"></span>Холимог идэшт</div>
+    </div>
+
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script type="module" src="js/map.js"></script>
+<script type="module">import { initNavAuth } from './js/auth.js'; initNavAuth();</script>
+</body>
+</html>

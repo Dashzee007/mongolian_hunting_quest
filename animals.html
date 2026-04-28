@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ан амьтад – Mongolian Hunting Quest</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">Mongolian Hunting Quest</div>
+    <nav>
+        <ul>
+            <li><a href="index.html">Нүүр</a></li>
+            <li><a href="animals.html" class="nav-active">Ан амьтад</a></li>
+            <li><a href="gallery.html">Зургийн сан</a></li>
+            <li><a href="map.html">Ан агнуурын бүс</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+
+    <section class="page-hero animals-hero">
+        <div class="page-hero-content">
+            <h1>Ан амьтдын мэдээллийн сан</h1>
+            <p>Монгол орны зэрлэг амьтдын дэлгэрэнгүй мэдээлэл, байршил, ангилал</p>
+        </div>
+    </section>
+
+    <!-- Sticky filter bar -->
+    <section class="filter-bar" aria-label="Шүүлт">
+        <div class="filter-inner">
+            <div class="filter-group">
+                <label for="a-search">Хайх</label>
+                <input id="a-search" type="search" placeholder="Амьтны нэр…" autocomplete="off">
+            </div>
+            <div class="filter-group">
+                <label for="a-type">Төрөл</label>
+                <select id="a-type">
+                    <option value="all">Бүгд</option>
+                    <option value="Хөхтөн">🦌 Хөхтөн</option>
+                    <option value="Шувуу">🦅 Шувуу</option>
+                    <option value="Холимог идэшт">🐻 Холимог идэшт</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="a-region">Бүс нутаг</label>
+                <select id="a-region">
+                    <option value="all">Бүгд</option>
+                </select>
+            </div>
+            <div class="filter-stats" id="filterStats">Уншиж байна…</div>
+        </div>
+    </section>
+
+    <section class="animals-section">
+        <div id="animalsGrid" class="animal-grid animals-page-grid"></div>
+    </section>
+
+</main>
+
+<!-- Modal -->
+<div id="animalModal" class="modal-overlay" role="dialog" aria-modal="true"
+     aria-labelledby="modalName" hidden>
+    <div class="modal-box">
+        <button class="modal-close" id="modalClose" aria-label="Хаах">✕</button>
+        <img id="modalImg" src="" alt="">
+        <div class="modal-body">
+            <h2 id="modalName"></h2>
+            <p class="modal-meta" id="modalMeta"></p>
+            <p id="modalDesc"></p>
+            <div class="modal-tags" id="modalTags"></div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>© 2026 Mongolian Hunting Quest</p>
+</footer>
+
+<script type="module" src="js/animals.js"></script>
+<script type="module">import { initNavAuth } from './js/auth.js'; initNavAuth();</script>
+</body>
+</html>

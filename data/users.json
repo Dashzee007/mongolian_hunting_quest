@@ -1,0 +1,18 @@
+[
+    {
+        "id": 1,
+        "username": "admin",
+        "email": "admin@mhq.mn",
+        "password": "Admin123!",
+        "role": "admin",
+        "createdAt": "2026-01-01"
+    },
+    {
+        "id": 2,
+        "username": "hunter",
+        "email": "hunter@mhq.mn",
+        "password": "Hunter123!",
+        "role": "user",
+        "createdAt": "2026-02-15"
+    }
+]

@@ -1,0 +1,16 @@
+# Archives
+*.zip
+*.rar
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor folders
+.vscode/
+.idea/
+.claude/
+
+# Node (just in case)
+node_modules/

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mongolian Hunting Quest</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">Mongolian Hunting Quest</div>
+    <nav>
+        <ul>
+            <li><a href="index.html" class="nav-active">Нүүр</a></li>
+            <li><a href="animals.html">Ан амьтад</a></li>
+            <li><a href="gallery.html">Зургийн сан</a></li>
+            <li><a href="map.html">Ан агнуурын бүс</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+
+    <!-- HERO -->
+    <section class="core">
+        <div class="core-content">
+            <h1>Монголын зэрлэг амьтдын нэгдсэн платформ</h1>
+            <p>Монгол орны ан амьтад, агнуурын бүс болон зургийн санг нэг дороос харна уу</p>
+
+            <div class="search-bar" role="search">
+                <label for="search" class="sr-only">Амьтдыг хайх</label>
+                <input id="search" placeholder="Амьтан хайх…" aria-label="Амьтдыг хайх" autocomplete="off"/>
+                <select id="type" aria-label="Төрлөөр шүүх">
+                    <option value="all">Бүгд</option>
+                    <option value="Хөхтөн">Хөхтөн</option>
+                    <option value="Шувуу">Шувуу</option>
+                    <option value="Холимог идэшт">Холимог идэшт</option>
+                </select>
+                <button class="search-btn" type="button">Хайх</button>
+                <ul id="suggestions" class="suggestions" aria-label="Хайлтын санал"></ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- RESULTS -->
+    <section class="results-section" aria-label="Хайлтын үр дүн">
+        <div id="resultsHeader" class="results-header">Бүх амьтдыг харуулж байна</div>
+        <div id="animalList" class="animal-grid"></div>
+    </section>
+
+    <script type="module" src="js/main.js"></script>
+    <script type="module">import { initNavAuth } from './js/auth.js'; initNavAuth();</script>
+
+    <!-- FEATURES -->
+    <section class="features">
+        <h2>Системийн боломжууд</h2>
+        <p>Монголын зэрлэг амьтдын тухай бүх мэдээллийг нэг дор</p>
+
+        <div class="feature-grid">
+            <article class="feature">
+                <span class="feature-icon">🐾</span>
+                <h3>Амьтдын мэдээллийн сан</h3>
+                <p>24 гаруй амьтны дэлгэрэнгүй мэдээлэл, зураг, байршил, ангиллыг харна уу.</p>
+            </article>
+            <article class="feature">
+                <span class="feature-icon">🗺️</span>
+                <h3>Интерактив газрын зураг</h3>
+                <p>Монгол орны ан агнуурын бүсийг Google Maps шиг харж, бүс тус бүрийн амьтдыг судална уу.</p>
+            </article>
+            <article class="feature">
+                <span class="feature-icon">🖼️</span>
+                <h3>Зургийн сан</h3>
+                <p>Монголын зэрлэг амьтдын мэргэжлийн зургийн цуглуулгыг ангиллаар нь харна уу.</p>
+            </article>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <p>© 2026 Mongolian Hunting Quest — Монголын ан амьтдын мэдээллийн платформ</p>
+</footer>
+
+</body>
+</html>
