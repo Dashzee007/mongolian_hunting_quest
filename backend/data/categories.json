@@ -1,0 +1,5 @@
+[
+  { "id": "cat_1", "name": "Хөхтөн",        "emoji": "🦌", "description": "Хөхтөн амьтад — mammals" },
+  { "id": "cat_2", "name": "Шувуу",          "emoji": "🦅", "description": "Шувуу — birds" },
+  { "id": "cat_3", "name": "Холимог идэшт",  "emoji": "🐻", "description": "Холимог идэшт — omnivores" }
+]
