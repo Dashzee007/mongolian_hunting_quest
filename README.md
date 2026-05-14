@@ -1,32 +1,103 @@
-# Mongolian Hunting Quest
+# Mongolian Hunting Quest 🦌
 
-## Төслийн тайлбар
-Энэ төсөл нь статик `Home` хуудсыг JavaScript ашиглан динамик хайлт, өгөгдлийн харуулалттай болгох зорилготой.
+Монголын зэрлэг амьтдын нэгдсэн мэдээллийн платформ — амьтдын каталог, интерактив газрын зураг, зургийн сан.
 
-## Ямар файлуудыг явуулах вэ
-- `index.html`
-- `style.css`
-- `data/animals.json`
-- `js/api.js`
-- `js/main.js`
-- `js/ui.js`
-- `js/Animal.js`
-- `images/` (хэрэв зураг хэрэгтэй бол)
+---
 
-## Даалгаврын шаардлагууд болон хэрэгжилт
-- **JSON-оор өгөгдөл бэлтгэх**: `data/animals.json`
-- **fetch ашиглан JSON татаж авах**: `js/api.js`
-- **map, filter, reduce, join ашиглах**: `js/ui.js`, `js/main.js`
-- **HTML DOM ашиглан хуудасны агуулгыг солих**: `js/ui.js`, `js/main.js`
-- **Класс, функцуудыг зохиомжилж ашиглах**: `js/Animal.js`, `js/main.js`, `js/ui.js`
-- **Модуль хэлбэрээр кодыг зохион байгуулах**: `import`/`export` ашигласан `js` фолдерын файлууд
+## Технологи
 
-## Хэрхэн ажилладаг вэ
-1. `index.html` дээр үндсэн layout болон хайлтын орон зайг бэлдсэн.
-2. `js/main.js` нь `js/api.js`-аас JSON өгөгдлийг `fetch` ашиглан авна.
-3. Хайлт, төрөл шүүлт хийж `filter`, `map`, `reduce`, `join` ашиглан өгөгдлийг боловсруулна.
-4. `js/ui.js` нь DOM-оор `animalList`-ийг шинэчилж, үр дүнг харуулна.
-5. `js/Animal.js` нь `Animal` класс ашиглан өгөгдлийг загварчилж буцаадаг.
+| Давхарга | Технологи |
+|---|---|
+| Frontend | React + Next.js 16 (App Router) |
+| Хэв маяг | CSS (custom design system) |
+| Өгөгдөл | JSON → Wikipedia API |
+| Газрын зураг | Leaflet.js |
+| Backend | Node.js + Express *(тусдаа `server/` фолдер)* |
+| Мэдээллийн сан | MySQL |
 
-## Сэрэмжлэх
-Төслийг ажиллуулахын тулд файл төвшинд эсвэл HTTP сервер дээр байршуулах хэрэгтэй (Live Server гэх мэт).
+---
+
+## Хуудаснууд
+
+| URL | Тайлбар |
+|---|---|
+| `/` | Нүүр хуудас — хайлт, амьтдын карт |
+| `/animals` | Амьтдын каталог — шүүлт, бүс нутаг |
+| `/gallery` | Зургийн сан — lightbox |
+| `/map` | Интерактив газрын зураг |
+| `/login` | Нэвтрэх |
+| `/signup` | Бүртгүүлэх |
+
+---
+
+## Суулгах заавар
+
+### Frontend (Next.js)
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Хөтөч дээр: **http://localhost:3000**
+
+### Backend (Express)
+
+```bash
+cd server
+npm install
+# server/.env файлд DB тохиргоо хийнэ
+node index.js
+```
+
+---
+
+## Фолдерийн бүтэц
+
+```
+mongolian-hunting-quest/
+│
+├── frontend/               ← Next.js app
+│   └── src/
+│       ├── app/            ← Хуудаснууд (App Router)
+│       ├── components/     ← React компонентууд
+│       ├── data/           ← JSON өгөгдөл
+│       ├── services/       ← Өгөгдөл татах логик
+│       └── hooks/          ← Custom hooks
+│
+├── server/                 ← Express backend
+│   ├── routes/
+│   └── middleware/
+│
+├── data/                   ← Эх JSON өгөгдөл
+├── images/                 ← Зурагнууд
+└── js/                     ← Хуучин vanilla JS (лавлагаа болгон)
+```
+
+---
+
+## Орчин хувьсагч
+
+`server/.env` файл үүсгэж дараах утгуудыг тохируулна:
+
+```env
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=your_password
+DB_NAME=mongolian_hunting_quest
+JWT_SECRET=your_secret_key
+PORT=3000
+```
+
+> ⚠️ `.env` файлыг **хэзээ ч** git-д оруулахгүй. `.gitignore`-д бүртгэлтэй.
+
+---
+
+## Хувь нэмэр оруулах
+
+1. Repo-г fork хийнэ
+2. Feature branch үүсгэнэ: `git checkout -b feature/your-feature`
+3. Commit хийнэ: `git commit -m "feat: describe your change"`
+4. Push хийнэ: `git push origin feature/your-feature`
+5. Pull Request нээнэ

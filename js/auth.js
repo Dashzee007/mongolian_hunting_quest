@@ -1,61 +1,65 @@
-const USERS_KEY   = 'mhq_users';
-const SESSION_KEY = 'mhq_session';
+const TOKEN_KEY = 'mhq_token';
 
-export async function loadAllUsers() {
-    let seed = [];
+// ── JWT helpers ─────────────────────────────────────────────────
+function decodeToken(token) {
     try {
-        const res = await fetch('../data/users.json');
-        if (res.ok) seed = await res.json();
-    } catch { /* file:// CORS or network error — seed users unavailable */ }
-    const local = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
-    // Local registrations take precedence; exclude seed duplicates by email
-    const localEmails = new Set(local.map(u => u.email));
-    return [...seed.filter(u => !localEmails.has(u.email)), ...local];
+        return JSON.parse(atob(token.split('.')[1]));
+    } catch { return null; }
+}
+
+export function getToken() {
+    return localStorage.getItem(TOKEN_KEY);
 }
 
 export function getSession() {
-    const raw = sessionStorage.getItem(SESSION_KEY);
-    return raw ? JSON.parse(raw) : null;
-}
-
-function setSession(user) {
-    const { password, ...safe } = user;
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify(safe));
+    const token   = getToken();
+    if (!token) return null;
+    const payload = decodeToken(token);
+    if (!payload || payload.exp * 1000 < Date.now()) {
+        localStorage.removeItem(TOKEN_KEY);
+        return null;
+    }
+    return payload; // { id, username, email, role }
 }
 
 function clearSession() {
-    sessionStorage.removeItem(SESSION_KEY);
+    localStorage.removeItem(TOKEN_KEY);
 }
 
+// ── API helpers ─────────────────────────────────────────────────
+async function apiPost(path, body) {
+    let res;
+    try {
+        res = await fetch(path, {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify(body),
+        });
+    } catch {
+        throw new Error('Сервертэй холбогдох боломжгүй байна. Сервер ажиллаж байгаа эсэхийг шалгана уу.');
+    }
+    let data = {};
+    try {
+        data = await res.json();
+    } catch {
+        throw new Error(`Серверийн алдаа (${res.status})`);
+    }
+    if (!res.ok) throw new Error(data.error || 'Серверийн алдаа');
+    return data;
+}
+
+// ── Auth actions ────────────────────────────────────────────────
 export async function login(identifier, password) {
-    const users = await loadAllUsers();
-    const user = users.find(
-        u => (u.email === identifier || u.username === identifier) && u.password === password
-    );
-    if (!user) throw new Error('Нэвтрэх нэр эсвэл нууц үг буруу байна');
-    setSession(user);
-    return user;
+    const data = await apiPost('/api/auth/login', { identifier, password });
+    localStorage.setItem(TOKEN_KEY, data.token);
+    return data.user;
 }
 
 export async function register({ username, email, password }) {
     if (!username || !email || !password) throw new Error('Бүх талбарыг бөглөнө үү');
-    const users = await loadAllUsers();
-    if (users.find(u => u.email === email))     throw new Error('Энэ имэйл аль хэдийн бүртгэгдсэн');
-    if (users.find(u => u.username === username)) throw new Error('Энэ хэрэглэгчийн нэр аль хэдийн авагдсан');
-
-    const local = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
-    const newUser = {
-        id:        Date.now(),
-        username,
-        email,
-        password,
-        role:      'user',
-        createdAt: new Date().toISOString().slice(0, 10)
-    };
-    local.push(newUser);
-    localStorage.setItem(USERS_KEY, JSON.stringify(local));
-    setSession(newUser);
-    return newUser;
+    const data = await apiPost('/api/auth/register', { username, email, password });
+    localStorage.setItem(TOKEN_KEY, data.token);
+    return data.user;
 }
 
 export function logout() {
@@ -63,6 +67,7 @@ export function logout() {
     window.location.href = 'index.html';
 }
 
+// ── Navbar ──────────────────────────────────────────────────────
 export function initNavAuth() {
     const navbar = document.querySelector('.navbar');
     if (!navbar) return;
@@ -88,13 +93,13 @@ export function initNavAuth() {
         div.appendChild(btn);
     } else {
         const loginLink = document.createElement('a');
-        loginLink.href       = 'login.html';
-        loginLink.className  = 'nav-btn nav-btn-outline';
+        loginLink.href        = 'login.html';
+        loginLink.className   = 'nav-btn nav-btn-outline';
         loginLink.textContent = 'Нэвтрэх';
 
         const signupLink = document.createElement('a');
-        signupLink.href       = 'signup.html';
-        signupLink.className  = 'nav-btn nav-btn-solid';
+        signupLink.href        = 'signup.html';
+        signupLink.className   = 'nav-btn nav-btn-solid';
         signupLink.textContent = 'Бүртгүүлэх';
 
         div.appendChild(loginLink);

@@ -1,4 +1,4 @@
-import { getSession } from './auth.js';
+import { getSession, getToken } from './auth.js';
 
 const BOOKINGS_KEY = 'mhq_bookings';
 let lawsData = null;
@@ -279,7 +279,7 @@ function showStep3(animal, order) {
     document.getElementById('bkPay').addEventListener('click',   () => processPayment(animal, order));
 }
 
-function processPayment(animal, order) {
+async function processPayment(animal, order) {
     const name   = document.getElementById('bkCardName').value.trim();
     const num    = document.getElementById('bkCardNum').value.replace(/\s/g, '');
     const expiry = document.getElementById('bkExpiry').value.trim();
@@ -293,14 +293,41 @@ function processPayment(animal, order) {
     if (!/^\d{2}\/\d{2}$/.test(expiry)) { showPayErr('Хугацаа MM/YY форматтай байна'); return; }
     if (cvv.length < 3)       { showPayErr('CVV буруу байна'); return; }
 
-    const btn = document.getElementById('bkPay');
+    const btn       = document.getElementById('bkPay');
+    const cardLast4 = num.slice(-4);
     btn.disabled    = true;
     btn.textContent = 'Боловсруулж байна…';
 
-    setTimeout(() => {
+    try {
+        const token  = getToken();
+        if (!token) {
+            showPayErr('Захиалга хийхийн тулд эхлээд нэвтэрнэ үү');
+            btn.disabled    = false;
+            btn.textContent = 'Төлбөр хийх ✓';
+            return;
+        }
+        const res    = await fetch('/api/bookings', {
+            method:  'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                animalName: animal.name,
+                region:     animal.region,
+                date:       order.date,
+                people:     order.people,
+                guide:      order.guide,
+                notes:      order.notes,
+                total:      order.total,
+            })
+        });
+        const result = await res.json();
+        if (!res.ok) { showPayErr(result.error || 'Серверийн алдаа'); btn.disabled = false; btn.textContent = 'Төлбөр хийх ✓'; return; }
+
         const session = getSession();
         const booking = {
-            id:        genId(),
+            id:        result.payment_code,
             userId:    session?.id || null,
             username:  session?.username || 'Зочин',
             animal:    animal.name,
@@ -310,12 +337,15 @@ function processPayment(animal, order) {
             guide:     order.guide,
             notes:     order.notes,
             total:     order.total,
-            cardLast4: num.slice(-4),
+            cardLast4,
             bookedAt:  new Date().toISOString()
         };
-        saveBooking(booking);
         showStep4(booking, animal);
-    }, 1400);
+    } catch (err) {
+        showPayErr('Сүлжээний алдаа: ' + err.message);
+        btn.disabled    = false;
+        btn.textContent = 'Төлбөр хийх ✓';
+    }
 }
 
 function showPayErr(msg) {
@@ -360,6 +390,14 @@ function showStep4(booking, animal) {
 
 // ── Public entry point ──────────────────────────────────────────
 export async function openBooking(animal) {
+    // Нэвтрээгүй бол login руу шилжүүлнэ
+    if (!getSession()) {
+        if (confirm('Захиалга хийхийн тулд нэвтрэх шаардлагатай.\nНэвтрэх хуудас руу орох уу?')) {
+            window.location.href = 'login.html';
+        }
+        return;
+    }
+
     const laws = await loadLaws();
 
     if (laws.protected.includes(animal.name)) {

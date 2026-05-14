@@ -13,9 +13,26 @@ async function fetchWikiImage(wikiTitle) {
     }
 }
 
+async function fetchAnimalsFromAPI() {
+    const res = await fetch("/api/animals");
+    if (!res.ok) throw new Error(`API error: ${res.status}`);
+    return res.json();
+}
+
+async function fetchAnimalsFromJSON() {
+    const res = await fetch("data/animals.json");
+    if (!res.ok) throw new Error("JSON fallback failed");
+    return res.json();
+}
+
 export async function getAnimals() {
-    const res = await fetch("../data/animals.json");
-    const animals = await res.json();
+    let animals;
+    try {
+        animals = await fetchAnimalsFromAPI();
+    } catch {
+        // file:// protocol эсвэл server унтарсан үед JSON-оос унших
+        animals = await fetchAnimalsFromJSON();
+    }
 
     // Бүх амьтанд Wikipedia зургийг зэрэг татна (Promise.all)
     const enriched = await Promise.all(
