@@ -3,9 +3,11 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@/components/layout/AuthContext'
 
 export default function LoginPage() {
   const router = useRouter()
+  const { login } = useAuth()
   const [identifier, setIdentifier] = useState('')
   const [password, setPassword]     = useState('')
   const [error, setError]           = useState('')
@@ -17,16 +19,16 @@ export default function LoginPage() {
     setLoading(true)
 
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch('http://localhost:3001/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ identifier, password }),
       })
 
       const data = await res.json()
-      if (!res.ok) throw new Error(data.message || 'Нэвтрэхэд алдаа гарлаа')
+      if (!res.ok) throw new Error(data.error || 'Нэвтрэхэд алдаа гарлаа')
 
-      localStorage.setItem('token', data.token)
+      login(data.user, data.token)
       router.push('/')
     } catch (err) {
       setError(err.message)
@@ -46,6 +48,18 @@ export default function LoginPage() {
           <div className="auth-message auth-error">{error}</div>
         )}
 
+        <div className="seed-users">
+          <p className="seed-title">📝 Өргөдлийн хэрэглэгчид (Test1234!):</p>
+          <ul>
+            <li>bold@example.mn</li>
+            <li>undral@example.mn</li>
+            <li>ganbayar@example.mn</li>
+            <li>oyun@example.mn</li>
+            <li>temujin@example.mn</li>
+            <li>james@example.com</li>
+          </ul>
+        </div>
+
         <form className="auth-form" onSubmit={handleSubmit} noValidate>
           <div className="form-group">
             <label htmlFor="identifier">Имэйл эсвэл нэвтрэх нэр</label>
@@ -54,7 +68,7 @@ export default function LoginPage() {
               type="text"
               value={identifier}
               onChange={e => setIdentifier(e.target.value)}
-              placeholder="имэйл@example.com"
+              placeholder="bold@example.mn"
               autoComplete="username"
               required
             />
