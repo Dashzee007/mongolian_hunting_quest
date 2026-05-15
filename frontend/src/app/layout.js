@@ -1,6 +1,7 @@
 import './globals.css'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
+import { AuthProvider } from '@/components/layout/AuthContext'
 
 export const metadata = {
   title: 'Mongolian Hunting Quest',
@@ -11,9 +12,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="mn">
       <body>
-        <Navbar />
-        {children}
-        <Footer />
+        <AuthProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   )
