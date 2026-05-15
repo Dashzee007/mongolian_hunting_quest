@@ -3,9 +3,11 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@/components/layout/AuthContext'
 
 export default function SignupPage() {
   const router = useRouter()
+  const { login } = useAuth()
   const [name, setName]         = useState('')
   const [email, setEmail]       = useState('')
   const [password, setPassword] = useState('')
@@ -20,17 +22,18 @@ export default function SignupPage() {
     setLoading(true)
 
     try {
-      const res = await fetch('/api/auth/register', {
+      const res = await fetch('http://localhost:3001/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ username: name, email, password }),
       })
 
       const data = await res.json()
-      if (!res.ok) throw new Error(data.message || 'Бүртгэлд алдаа гарлаа')
+      if (!res.ok) throw new Error(data.error || 'Бүртгэлд алдаа гарлаа')
 
-      setSuccess('Бүртгэл амжилттай! Нэвтрэх хуудас руу шилжиж байна…')
-      setTimeout(() => router.push('/login'), 1500)
+      setSuccess('Бүртгэл амжилттай! Автоматаар нэвтэрч байна…')
+      login(data.user, data.token)
+      setTimeout(() => router.push('/'), 1000)
     } catch (err) {
       setError(err.message)
     } finally {
