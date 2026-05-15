@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/components/layout/AuthContext'
+import { API_ENDPOINTS } from '@/services/api'
 
 export default function SignupPage() {
   const router = useRouter()
@@ -22,7 +23,7 @@ export default function SignupPage() {
     setLoading(true)
 
     try {
-      const res = await fetch('http://localhost:3001/api/auth/register', {
+      const res = await fetch(API_ENDPOINTS.REGISTER, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: name, email, password }),
